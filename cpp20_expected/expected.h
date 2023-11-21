@@ -15,7 +15,8 @@
 #include <xutility>
 #if _STL_COMPILER_PREPROCESSOR
 #if !_HAS_CXX23 || !defined(__cpp_lib_concepts) // TRANSITION, GH-395
-_EMIT_STL_WARNING(STL4038, "The contents of <expected> are available only with C++23 or later.");
+// This project is to test if I can use expected in a c++20 project, via copying the code from C++23.
+//_EMIT_STL_WARNING(STL4038, "The contents of <expected> are available only with C++23 or later. This code is copied from C++23 to be used as experimental use.");
 #endif // ^^^ not supported / supported language mode vvv
 
 #pragma pack(push, _CRT_PACKING)
@@ -26,7 +27,7 @@ _STL_DISABLE_CLANG_WARNINGS
 #undef new
 
 namespace std::experimental {
-
+     
     _EXPORT_STD template <class _Err>
         class unexpected;
 

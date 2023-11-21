@@ -13,6 +13,21 @@ std::experimental::expected<std::string, std::error_code> fun(bool ay) {
     return "Hello, expected World!";
 }
 
+std::experimental::expected<void, std::error_code> testVoid(bool ay) {
+    if (!ay)
+        return std::experimental::unexpected(std::make_error_code(
+            std::errc::invalid_argument));
+    return {};
+}
+
+std::experimental::expected<std::pair<int, char>, std::error_code> testPair(bool ay) {
+	if (!ay)
+        return std::experimental::unexpected(std::make_error_code(
+			std::errc::invalid_argument));
+	return std::make_pair(2, 'c');
+}
+
+
 enum class ErrorCode {
     Success,
     InvalidArgument,
@@ -31,6 +46,8 @@ std::ostream& operator<<(std::ostream& os, ErrorCode ec)
 
 int main()
 {
+    std::cout << std::boolalpha;
+
     // Similar interface to std::optional
     std::experimental::expected<int, int> v = 123;
 
@@ -50,7 +67,25 @@ int main()
     // std::expected<NoDefault,int> n; // Wouldn't compile
     std::experimental::expected<NoDefault, int> n{ 20 }; // OK
 
-    std::cout << std::boolalpha;
+    auto pairTestResult = testPair(true);
+    std::cout << "pairTestResult has_value " << pairTestResult.has_value() << std::endl;
+    if (!pairTestResult)
+        std::cout << "pairTestResult is not OK" << std::endl;
+    else
+    {
+        auto [i, c] = pairTestResult.value();
+        std::cout << "pairTestResult value " << i << " : " << c << std::endl;
+    }
+
+
+
+    auto testVoidResult = testVoid(false);
+    std::cout << "testVoidResult has_value " << testVoidResult.has_value() << std::endl;
+    if (testVoidResult)
+		std::cout << "testVoidResult is OK" << std::endl;
+	else
+		std::cout << "testVoidResult is not OK" << testVoidResult.has_value() << std::endl;
+
     std::cout << fun(true).value() << std::endl;
     std::cout << fun(false).value_or("not OK") << std::endl;
     std::cout << "has value? " << v.has_value() << " : " << v.value() << std::endl;
